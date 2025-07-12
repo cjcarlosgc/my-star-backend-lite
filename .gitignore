@@ -1,0 +1,38 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build output
+dist/
+app/dist/
+
+# Logs
+logs
+*.log
+*.log.*
+
+# IDEs/Editors
+.vscode/
+.idea/
+*.swp
+
+# Env files
+.env
+app/.env
+.env.local
+.env.test
+.env.production
+
+# Coverage
+coverage/
+app/coverage/
+
+# Nest CLI output
+app/.nestjs/
+
+# Mac / Linux / Windows system files
+.DS_Store
+Thumbs.db

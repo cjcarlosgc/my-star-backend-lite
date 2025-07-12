@@ -1,0 +1,143 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateCustomerInput {
+  dni: String!
+  lastName: String!
+  name: String!
+  sex: String!
+}
+
+type CreateCustomerOutput {
+  customer: Customer
+  message: String
+  success: Boolean!
+}
+
+input CreateInvoiceDetailInput {
+  productId: String!
+  quantity: Float!
+  unitPrice: Float!
+}
+
+input CreateInvoiceInput {
+  customerId: String!
+  items: [CreateInvoiceDetailInput!]!
+}
+
+type CreateInvoiceOutput {
+  invoice: Invoice
+  message: String
+  success: Boolean!
+}
+
+input CreateProductInput {
+  brand: String!
+  description: String!
+  unitPrice: Float!
+}
+
+type CreateProductOutput {
+  message: String
+  product: Product
+  success: Boolean!
+}
+
+type Customer {
+  dni: String!
+  id: ID!
+  lastName: String!
+  name: String!
+  sex: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input DeleteCustomerInput {
+  id: ID!
+}
+
+type DeleteCustomerOutput {
+  message: String
+  success: Boolean!
+}
+
+input DeleteProductInput {
+  id: ID!
+}
+
+type DeleteProductOutput {
+  message: String
+  success: Boolean!
+}
+
+type Invoice {
+  createdAt: DateTime!
+  customerId: String!
+  id: ID!
+  items: [InvoiceDetail!]
+  total: Float!
+}
+
+type InvoiceDetail {
+  id: ID!
+  invoiceId: String!
+  productId: String!
+  quantity: Float!
+  subtotal: Float!
+  unitPrice: Float!
+}
+
+type Mutation {
+  createCustomer(input: CreateCustomerInput!): CreateCustomerOutput!
+  createInvoice(input: CreateInvoiceInput!): CreateInvoiceOutput!
+  createProduct(input: CreateProductInput!): CreateProductOutput!
+  deleteCustomer(input: DeleteCustomerInput!): DeleteCustomerOutput!
+  deleteProduct(input: DeleteProductInput!): DeleteProductOutput!
+  updateCustomer(id: String!, input: UpdateCustomerInput!): UpdateCustomerOutput!
+  updateProduct(id: String!, input: UpdateProductInput!): UpdateProductOutput!
+}
+
+type Product {
+  brand: String!
+  description: String!
+  id: ID!
+  unitPrice: Float!
+}
+
+type Query {
+  customer(id: String!): Customer
+  customers: [Customer!]!
+  invoices: [Invoice!]!
+  product(id: String!): Product
+  products: [Product!]!
+}
+
+input UpdateCustomerInput {
+  dni: String
+  lastName: String
+  name: String
+  sex: String
+}
+
+type UpdateCustomerOutput {
+  customer: Customer
+  message: String
+  success: Boolean!
+}
+
+input UpdateProductInput {
+  brand: String
+  description: String
+  unitPrice: Float
+}
+
+type UpdateProductOutput {
+  message: String
+  product: Product
+  success: Boolean!
+}

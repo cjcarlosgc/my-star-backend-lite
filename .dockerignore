@@ -1,0 +1,29 @@
+# Ignorar la carpeta node_modules (la imagen la instala por sí sola)
+app/node_modules
+node_modules
+
+# Build output
+app/dist
+dist
+
+# Logs
+*.log
+app/*.log
+
+# Tests y coverage
+app/test
+app/coverage
+
+# Archivos de entorno
+*.env
+app/.env
+
+# Config de desarrollo
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Archivos específicos de Git
+.git
+.gitignore
