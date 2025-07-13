@@ -18,6 +18,11 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Install dependencies
         run: |
           cd app
@@ -33,5 +38,4 @@ jobs:
         with:
           app-name: my-star-backend-lite   # ✅ Nombre exacto de tu App Service en Azure
           slot-name: production
-          publish-profile: ${{ secrets.AZURE_CREDENTIALS }}
           package: ./app
