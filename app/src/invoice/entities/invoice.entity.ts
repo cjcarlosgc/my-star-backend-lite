@@ -1,5 +1,5 @@
-import { InvoiceDetail } from "@app/invoice-detail/entities/invoice-detail.entity";
-import { Field, Float, ID, ObjectType } from "@nestjs/graphql";
+import { InvoiceDetail } from '@app/invoice-detail/entities/invoice-detail.entity';
+import { Field, Float, ID, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class Invoice {
