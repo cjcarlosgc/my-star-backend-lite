@@ -18,11 +18,8 @@ export class ProductResolver {
   }
 
   @Mutation(() => UpdateProductOutput)
-  updateProduct(
-    @Args('id') id: string,
-    @Args('input') input: UpdateProductInput,
-  ) {
-    return this.service.update(id, input);
+  updateProduct(@Args('input') input: UpdateProductInput) {
+    return this.service.update(input.id, input);
   }
 
   @Mutation(() => DeleteProductOutput)
