@@ -78,6 +78,9 @@ export class ProductService {
     return await Promise.resolve({
       success: true,
       message: 'Producto eliminado',
+      product: {
+        id: input.id,
+      } as Product,
     });
   }
 
