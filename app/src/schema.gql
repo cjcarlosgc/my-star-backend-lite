@@ -72,6 +72,7 @@ input DeleteProductInput {
 
 type DeleteProductOutput {
   message: String
+  product: Product
   success: Boolean!
 }
 
@@ -92,6 +93,25 @@ type InvoiceDetail {
   unitPrice: Float!
 }
 
+input LoginInput {
+  password: String!
+  userName: String!
+}
+
+type LoginOutput {
+  menuItems: [MenuItemType!]!
+  name: String!
+  role: String!
+  userId: Float!
+  userName: String!
+}
+
+type MenuItemType {
+  description: String!
+  name: String!
+  redirectTo: String!
+}
+
 type Mutation {
   createCustomer(input: CreateCustomerInput!): CreateCustomerOutput!
   createInvoice(input: CreateInvoiceInput!): CreateInvoiceOutput!
@@ -99,7 +119,7 @@ type Mutation {
   deleteCustomer(input: DeleteCustomerInput!): DeleteCustomerOutput!
   deleteProduct(input: DeleteProductInput!): DeleteProductOutput!
   updateCustomer(id: String!, input: UpdateCustomerInput!): UpdateCustomerOutput!
-  updateProduct(id: String!, input: UpdateProductInput!): UpdateProductOutput!
+  updateProduct(input: UpdateProductInput!): UpdateProductOutput!
 }
 
 type Product {
@@ -113,6 +133,7 @@ type Query {
   customer(id: String!): Customer
   customers: [Customer!]!
   invoices: [Invoice!]!
+  login(input: LoginInput!): LoginOutput
   product(id: String!): Product
   products: [Product!]!
 }
@@ -133,6 +154,7 @@ type UpdateCustomerOutput {
 input UpdateProductInput {
   brand: String
   description: String
+  id: String!
   unitPrice: Float
 }
 
