@@ -22,7 +22,10 @@ export class LoginOutput {
   userName: string;
 
   @Field()
-  name: string;
+  firstName: string;
+
+  @Field()
+  lastName: string;
 
   @Field(() => String)
   role: Role;

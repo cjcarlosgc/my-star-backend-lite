@@ -20,7 +20,8 @@ export class AuthService {
     return {
       userId: 1,
       userName: input.userName,
-      name: 'Jean Carlos Garcia',
+      firstName: 'Jean Carlos',
+      lastName: 'Garcia Changano',
       role: Role.ADMINISTRATOR,
       menuItems: [
         { name: 'Productos', description: 'Gestión de productos', redirectTo: 'products' },
