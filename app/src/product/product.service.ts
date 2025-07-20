@@ -38,8 +38,12 @@ export class ProductService {
   ];
 
   public async create(input: CreateProductInput): Promise<CreateProductOutput> {
+    const lastItemId = this.products[this.products.length-1].id;
+    const lastItemIdNumber = lastItemId.split('p')[1];
+    const newIdFirstPart = 'p' + lastItemIdNumber;
+
     const product: Product = {
-      id: crypto.randomUUID(),
+      id: newIdFirstPart,
       ...input,
     };
     this.products.push(product);
