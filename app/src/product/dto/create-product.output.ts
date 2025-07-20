@@ -3,7 +3,7 @@ import { BaseOutput } from '@app/shared/dto/base-output.dto';
 import { Product } from '../entities/product.entity';
 
 @ObjectType()
-export class CreateProductOutput extends BaseOutput {
+export class CreateProductOutput {
   @Field(() => Product, { nullable: true })
-  product?: Product;
+  productId: string;
 }
