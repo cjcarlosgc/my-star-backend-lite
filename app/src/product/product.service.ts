@@ -44,9 +44,7 @@ export class ProductService {
     };
     this.products.push(product);
     return await Promise.resolve({
-      success: true,
-      message: 'Producto creado',
-      product,
+      productId: product.id,
     });
   }
 

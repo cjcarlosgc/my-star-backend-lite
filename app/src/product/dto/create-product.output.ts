@@ -1,9 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { BaseOutput } from '@app/shared/dto/base-output.dto';
-import { Product } from '../entities/product.entity';
 
 @ObjectType()
 export class CreateProductOutput {
-  @Field(() => Product, { nullable: true })
+  @Field(() => String, { nullable: true })
   productId: string;
 }

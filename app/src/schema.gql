@@ -39,9 +39,7 @@ input CreateProductInput {
 }
 
 type CreateProductOutput {
-  message: String
-  product: Product
-  success: Boolean!
+  productId: String
 }
 
 type Customer {
@@ -99,8 +97,9 @@ input LoginInput {
 }
 
 type LoginOutput {
+  firstName: String!
+  lastName: String!
   menuItems: [MenuItemType!]!
-  name: String!
   role: String!
   userId: Float!
   userName: String!
