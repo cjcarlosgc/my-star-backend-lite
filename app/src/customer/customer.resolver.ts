@@ -7,6 +7,7 @@ import { UpdateCustomerInput } from './dto/update-customer.input';
 import { UpdateCustomerOutput } from './dto/update-customer.output';
 import { DeleteCustomerInput } from './dto/delete-customer.input';
 import { DeleteCustomerOutput } from './dto/delete-customer.output';
+import { GetCustomerInput } from './dto/get-customer.input';
 
 @Resolver(() => Customer)
 export class CustomerResolver {
@@ -36,7 +37,7 @@ export class CustomerResolver {
   }
 
   @Query(() => Customer, { nullable: true })
-  customer(@Args('id') id: string) {
-    return this.service.findById(id);
+  customer(@Args('input') input: GetCustomerInput) {
+    return this.service.findById(input.id);
   }
 }
