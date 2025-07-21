@@ -31,7 +31,7 @@ export class CustomerService {
     input: CreateCustomerInput,
   ): Promise<CreateCustomerOutput> {
      const lastItemId = this.customers[this.customers.length-1].id;
-    const lastItemIdNumber = lastItemId.split('p')[1];
+    const lastItemIdNumber = lastItemId.split('c')[1];
     const newIdNumeration = Number(lastItemIdNumber) + 1;
     const newIdFirstPart = 'c' + newIdNumeration;
 
