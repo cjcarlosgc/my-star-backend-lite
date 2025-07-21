@@ -10,9 +10,7 @@ input CreateCustomerInput {
 }
 
 type CreateCustomerOutput {
-  customer: Customer
-  message: String
-  success: Boolean!
+  customerId: String
 }
 
 input CreateInvoiceDetailInput {
@@ -60,8 +58,7 @@ input DeleteCustomerInput {
 }
 
 type DeleteCustomerOutput {
-  message: String
-  success: Boolean!
+  customerId: String
 }
 
 input DeleteProductInput {
@@ -72,6 +69,15 @@ type DeleteProductOutput {
   message: String
   product: Product
   success: Boolean!
+}
+
+input GetCustomerInput {
+  id: String!
+}
+
+input GetCustomersByInput {
+  pattern: String!
+  searchType: String!
 }
 
 type Invoice {
@@ -129,8 +135,9 @@ type Product {
 }
 
 type Query {
-  customer(id: String!): Customer
+  customer(input: GetCustomerInput!): Customer
   customers: [Customer!]!
+  findCustomersBy(input: GetCustomersByInput!): [Customer!]!
   invoices: [Invoice!]!
   login(input: LoginInput!): LoginOutput
   product(id: String!): Product
@@ -145,9 +152,7 @@ input UpdateCustomerInput {
 }
 
 type UpdateCustomerOutput {
-  customer: Customer
-  message: String
-  success: Boolean!
+  customerId: String
 }
 
 input UpdateProductInput {

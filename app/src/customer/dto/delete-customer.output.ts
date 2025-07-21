@@ -1,5 +1,7 @@
-import { ObjectType } from '@nestjs/graphql';
-import { BaseOutput } from '@app/shared/dto/base-output.dto';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class DeleteCustomerOutput extends BaseOutput {}
+export class DeleteCustomerOutput {
+     @Field(() => String, { nullable: true })
+      customerId: string;
+}

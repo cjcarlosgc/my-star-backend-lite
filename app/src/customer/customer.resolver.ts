@@ -8,6 +8,7 @@ import { UpdateCustomerOutput } from './dto/update-customer.output';
 import { DeleteCustomerInput } from './dto/delete-customer.input';
 import { DeleteCustomerOutput } from './dto/delete-customer.output';
 import { GetCustomerInput } from './dto/get-customer.input';
+import { GetCustomersByInput } from './dto/get-customers-by.input';
 
 @Resolver(() => Customer)
 export class CustomerResolver {
@@ -39,5 +40,12 @@ export class CustomerResolver {
   @Query(() => Customer, { nullable: true })
   customer(@Args('input') input: GetCustomerInput) {
     return this.service.findById(input.id);
+  }
+
+  @Query(() => [Customer])
+  findCustomersBy(
+    @Args('input') input: GetCustomersByInput
+  ) {
+    return this.service.findBy(input.searchType, input.pattern);
   }
 }
