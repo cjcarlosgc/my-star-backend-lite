@@ -16,12 +16,14 @@ describe('CustomerService', () => {
     expect(service).toBeDefined();
   });
 
-  it.only('should return customers by DNI pattern', async () => {
+  it('should return customers by DNI pattern', async () => {
     const result = await service.findBy('BY_DNI', '66');
 
     console.log(result);
 
     expect(Array.isArray(result)).toBe(true);
+
+
     expect(result.length).toBeGreaterThan(0);
     result.forEach((customer) => {
       expect(customer.dni.startsWith('66')).toBe(true);
