@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
 import { CustomerService } from './customer.service';
 import { Customer } from './entities/customer.entity';
 import { CreateCustomerInput } from './dto/create-customer.input';
@@ -9,43 +9,64 @@ import { DeleteCustomerInput } from './dto/delete-customer.input';
 import { DeleteCustomerOutput } from './dto/delete-customer.output';
 import { GetCustomerInput } from './dto/get-customer.input';
 import { GetCustomersByInput } from './dto/get-customers-by.input';
+import {
+  GraphqlContext,
+  requireBearerToken,
+} from '../shared/auth/graphql-context';
 
 @Resolver(() => Customer)
 export class CustomerResolver {
   constructor(private readonly service: CustomerService) {}
 
   @Mutation(() => CreateCustomerOutput)
-  createCustomer(@Args('input') input: CreateCustomerInput) {
-    return this.service.create(input);
+  createCustomer(
+    @Args('input') input: CreateCustomerInput,
+    @Context() context: GraphqlContext,
+  ) {
+    const token = requireBearerToken(context);
+    return this.service.create(token, input);
   }
 
   @Mutation(() => UpdateCustomerOutput)
   updateCustomer(
     @Args('id') id: string,
     @Args('input') input: UpdateCustomerInput,
+    @Context() context: GraphqlContext,
   ) {
-    return this.service.update(id, input);
+    const token = requireBearerToken(context);
+    return this.service.update(token, id, input);
   }
 
   @Mutation(() => DeleteCustomerOutput)
-  deleteCustomer(@Args('input') input: DeleteCustomerInput) {
-    return this.service.delete(input);
+  deleteCustomer(
+    @Args('input') input: DeleteCustomerInput,
+    @Context() context: GraphqlContext,
+  ) {
+    const token = requireBearerToken(context);
+    return this.service.delete(token, input);
   }
 
   @Query(() => [Customer])
-  customers() {
-    return this.service.findAll();
+  customers(@Context() context: GraphqlContext) {
+    const token = requireBearerToken(context);
+    return this.service.findAll(token);
   }
 
   @Query(() => Customer, { nullable: true })
-  customer(@Args('input') input: GetCustomerInput) {
-    return this.service.findById(input.id);
+  customer(
+    @Args('input') input: GetCustomerInput,
+    @Context() context: GraphqlContext,
+  ) {
+    const token = requireBearerToken(context);
+    return this.service.findById(token, input.id);
   }
 
   @Query(() => [Customer])
   findCustomersBy(
-    @Args('input') input: GetCustomersByInput
+    @Args('input') input: GetCustomersByInput,
+    @Context() context: GraphqlContext,
   ) {
-    return this.service.findBy(input.searchType, input.pattern);
+    const token = requireBearerToken(context);
+    return this.service.findBy(token, input.searchType, input.pattern);
   }
 }

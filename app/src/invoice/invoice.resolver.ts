@@ -5,24 +5,34 @@ import {
   Args,
   ResolveField,
   Parent,
+  Context,
 } from '@nestjs/graphql';
 import { InvoiceService } from './invoice.service';
 import { Invoice } from './entities/invoice.entity';
 import { InvoiceDetail } from '@app/invoice-detail/entities/invoice-detail.entity';
 import { CreateInvoiceInput } from './dto/create-invoice.input';
 import { CreateInvoiceOutput } from './dto/create-invoice.output';
+import {
+  GraphqlContext,
+  requireBearerToken,
+} from '../shared/auth/graphql-context';
 
 @Resolver(() => Invoice)
 export class InvoiceResolver {
   constructor(private readonly service: InvoiceService) {}
 
   @Mutation(() => CreateInvoiceOutput)
-  createInvoice(@Args('input') input: CreateInvoiceInput) {
+  createInvoice(
+    @Args('input') input: CreateInvoiceInput,
+    @Context() context: GraphqlContext,
+  ) {
+    requireBearerToken(context);
     return this.service.create(input);
   }
 
   @Query(() => [Invoice])
-  invoices() {
+  invoices(@Context() context: GraphqlContext) {
+    requireBearerToken(context);
     return this.service.findAll();
   }
 

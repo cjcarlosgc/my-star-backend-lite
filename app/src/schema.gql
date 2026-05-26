@@ -41,6 +41,7 @@ type CreateProductOutput {
 }
 
 type Customer {
+  age: Int
   dni: String!
   id: ID!
   lastName: String!
@@ -103,12 +104,15 @@ input LoginInput {
 }
 
 type LoginOutput {
-  firstName: String!
-  lastName: String!
+  firstName: String
+  lastName: String
   menuItems: [MenuItemType!]!
-  role: String!
-  userId: Float!
-  userName: String!
+  message: String
+  role: String
+  success: Boolean!
+  token: String
+  userId: Float
+  userName: String
 }
 
 type MenuItemType {

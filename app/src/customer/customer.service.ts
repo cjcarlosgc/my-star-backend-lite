@@ -7,84 +7,144 @@ import { UpdateCustomerOutput } from './dto/update-customer.output';
 import { DeleteCustomerInput } from './dto/delete-customer.input';
 import { DeleteCustomerOutput } from './dto/delete-customer.output';
 
+type RemoteCustomer = {
+  id: number;
+  dni: string;
+  name: string;
+  lastname: string;
+  sex: string;
+  age?: number;
+};
+
+type CustomersResponse = {
+  data?: RemoteCustomer[];
+  success?: boolean;
+};
+
+type CustomerResponse = {
+  data?: RemoteCustomer;
+  success?: boolean;
+};
+
 @Injectable()
 export class CustomerService {
-  private customers: Customer[] = [
-    { id: 'c1', name: 'Carlos', lastName: 'Pérez', dni: '12345678', sex: 'M' },
-    { id: 'c2', name: 'Lucía', lastName: 'Ramírez', dni: '87654321', sex: 'F' },
-    { id: 'c3', name: 'Miguel', lastName: 'Gómez', dni: '11223344', sex: 'M' },
-    { id: 'c4', name: 'María', lastName: 'López', dni: '22334455', sex: 'F' },
-    { id: 'c5', name: 'Juan', lastName: 'Martínez', dni: '33445566', sex: 'M' },
-    { id: 'c6', name: 'Maria Fernanda', lastName: 'Sánchez', dni: '44556677', sex: 'F' },
-    { id: 'c7', name: 'Pedro', lastName: 'Fernández', dni: '55667788', sex: 'M' },
-    { id: 'c8', name: 'Sofía', lastName: 'García', dni: '66778899', sex: 'F' },
-    { id: 'c9', name: 'Miguel', lastName: 'Torres', dni: '77889900', sex: 'M' },
-    { id: 'c10', name: 'Miguel Angel', lastName: 'Morales', dni: '88990011', sex: 'F' },
-    { id: 'c11', name: 'Juan Pedro', lastName: 'Castro', dni: '99001122', sex: 'M' },
-    { id: 'c12', name: 'Carla', lastName: 'Silva', dni: '10111213', sex: 'F' },
-    { id: 'c13', name: 'Andrés', lastName: 'Reyes', dni: '12131415', sex: 'M' },
-    { id: 'c14', name: 'Juan Carlos', lastName: 'Herrera', dni: '66141516', sex: 'F' },
-    { id: 'c15', name: 'Carlo', lastName: 'Mendoza', dni: '66151617', sex: 'M' },
-  ];
+  private readonly baseUrl =
+    process.env.CUSTOMER_API_BASE_URL ?? 'https://my-star-services.onrender.com';
+
+  private customers: Customer[] = [];
 
   public async create(
+    token: string,
     input: CreateCustomerInput,
   ): Promise<CreateCustomerOutput> {
-     const lastItemId = this.customers[this.customers.length-1].id;
-    const lastItemIdNumber = lastItemId.split('c')[1];
-    const newIdNumeration = Number(lastItemIdNumber) + 1;
-    const newIdFirstPart = 'c' + newIdNumeration;
+    void token;
+
+    const lastItemId = this.customers[this.customers.length - 1]?.id ?? '0';
+    const newIdNumeration = Number(lastItemId) + 1;
+    const newIdFirstPart = String(newIdNumeration);
 
     const customer: Customer = {
       id: newIdFirstPart,
-      ...input,
+      name: input.name,
+      lastName: input.lastName,
+      dni: input.dni,
+      sex: input.sex,
     };
     this.customers.push(customer);
-    return await Promise.resolve({
-      customerId: customer.id
+    return Promise.resolve({
+      customerId: customer.id,
     });
   }
 
   public async update(
+    token: string,
     id: string,
     input: UpdateCustomerInput,
   ): Promise<UpdateCustomerOutput> {
-    const index = this.customers.findIndex((c) => c.id === id);
-    if (index === -1)
-      throw new Error();
+    void token;
 
-    const updated = { ...this.customers[index], ...input };
+    const index = this.customers.findIndex((c) => c.id === id);
+    if (index === -1) throw new Error();
+
+    const updated: Customer = {
+      id: this.customers[index].id,
+      name: input.name ?? this.customers[index].name,
+      lastName: input.lastName ?? this.customers[index].lastName,
+      dni: input.dni ?? this.customers[index].dni,
+      sex: input.sex ?? this.customers[index].sex,
+      age: this.customers[index].age,
+    };
     this.customers[index] = updated;
-    return await Promise.resolve({ customerId: updated.id });
+    return Promise.resolve({ customerId: updated.id });
   }
 
   public async delete(
+    token: string,
     input: DeleteCustomerInput,
   ): Promise<DeleteCustomerOutput> {
+    void token;
+
     const index = this.customers.findIndex((c) => c.id === input.id);
-    if (index === -1)
-      throw new Error();
+    if (index === -1) throw new Error();
 
     this.customers.splice(index, 1);
-    return await Promise.resolve({
-      customerId: input.id
+    return Promise.resolve({
+      customerId: input.id,
     });
   }
 
-  public async findAll(): Promise<Customer[]> {
-    return await Promise.resolve(this.customers);
+  public async findAll(token: string): Promise<Customer[]> {
+    const response = await fetch(`${this.baseUrl}/api/customers`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('No se pudo obtener la lista de customers');
+    }
+
+    const body = (await response.json()) as CustomersResponse;
+    if (!body.success || !Array.isArray(body.data)) {
+      throw new Error('Respuesta inválida del servicio de customers');
+    }
+
+    this.customers = body.data.map((customer) =>
+      this.mapRemoteCustomer(customer),
+    );
+
+    return this.customers;
   }
 
-  public async findById(id: string): Promise<Customer | null> {
-    return await Promise.resolve(
-      this.customers.find((c) => c.id === id) ?? null,
-    );
+  public async findById(token: string, id: string): Promise<Customer | null> {
+    const response = await fetch(`${this.baseUrl}/api/customers/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      const body = (await response.json()) as CustomerResponse;
+
+      if (body.success && body.data) {
+        const customer = this.mapRemoteCustomer(body.data);
+        this.upsertLocalCustomer(customer);
+        return customer;
+      }
+    }
+
+    return Promise.resolve(this.customers.find((c) => c.id === id) ?? null);
   }
 
   public async findBy(
+    token: string,
     searchType: 'BY_NAME' | 'BY_SEX' | 'BY_DNI',
     pattern: string,
   ): Promise<Customer[]> {
+    if (this.customers.length === 0) {
+      await this.findAll(token);
+    }
+
     const lowerPattern = pattern.toLowerCase();
     let result: Customer[] = [];
 
@@ -101,6 +161,29 @@ export class CustomerService {
         c.dni.toLowerCase().startsWith(lowerPattern),
       );
     }
-    return await Promise.resolve(result);
+
+    return Promise.resolve(result);
+  }
+
+  private mapRemoteCustomer(customer: RemoteCustomer): Customer {
+    return {
+      id: String(customer.id),
+      name: customer.name,
+      lastName: customer.lastname,
+      dni: customer.dni,
+      sex: customer.sex,
+      age: customer.age,
+    };
+  }
+
+  private upsertLocalCustomer(customer: Customer): void {
+    const index = this.customers.findIndex((c) => c.id === customer.id);
+
+    if (index === -1) {
+      this.customers.push(customer);
+      return;
+    }
+
+    this.customers[index] = customer;
   }
 }

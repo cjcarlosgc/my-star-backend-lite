@@ -16,19 +16,28 @@ export class MenuItemType {
 @ObjectType()
 export class LoginOutput {
   @Field()
-  userId: number;
+  success: boolean;
 
-  @Field()
-  userName: string;
+  @Field({ nullable: true })
+  message?: string;
 
-  @Field()
-  firstName: string;
+  @Field({ nullable: true })
+  token?: string;
 
-  @Field()
-  lastName: string;
+  @Field({ nullable: true })
+  userId?: number;
 
-  @Field(() => String)
-  role: Role;
+  @Field({ nullable: true })
+  userName?: string;
+
+  @Field({ nullable: true })
+  firstName?: string;
+
+  @Field({ nullable: true })
+  lastName?: string;
+
+  @Field(() => String, { nullable: true })
+  role?: Role;
 
   @Field(() => [MenuItemType])
   menuItems: MenuItemType[];
